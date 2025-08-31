@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>My MapLibre Map</title>
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+
+    <script src="https://unpkg.com/maplibre-gl@^5.7.0/dist/maplibre-gl.js"></script>
+    <link href="https://unpkg.com/maplibre-gl@^5.7.0/dist/maplibre-gl.css" rel="stylesheet" />
+
+    <style>
+        body { margin: 0; padding: 0; }
+        #map { position: absolute; top: 0; bottom: 0; width: 100%; }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    <script>
+        var map = new maplibregl.Map({
+        container: 'map', // container id
+        //style: 'https://demotiles.maplibre.org/style.json', // style URL
+        style: {{style|safe}},
+        center: [0, 0], // starting position [lng, lat]
+        zoom: 15 // starting zoom
+    });
+
+
+    const myGeoJSON1 = {
+    'type': 'Feature',
+    'geometry': {
+        'type': 'Polygon',
+        'coordinates': [
+            [
+                [0,0],
+                [0,10],
+                [10,10],
+                [10,0]
+            ]
+        ]
+    }
+
+    };
+
+    const myGeoJSON = {{ a_json | safe }};
+
+    map.on('load', () => {
+        // Step 1: Add a data source
+        map.addSource('my-polygon-source', {
+        'type': 'geojson',
+        'data': myGeoJSON1
+        });
+        //
+        // Step 2: Add a new layer to visualize the polygon
+        map.addLayer({
+        'id': 'my-polygon-layer',
+        'type': 'fill', // 'fill' is for polygons
+        'source': 'my-polygon-source', // Reference the data source by its ID
+        'paint': {
+            'fill-color': {{fill_colors|safe}},
+            'fill-opacity': 1
+            }
+        });
+                    // Step 3: Add a new layer to visualize the polygons
+      //      map.addLayer({
+       //         'id': 'my-polygon-layer',
+        //        'type': 'fill', // 'fill' is for polygons
+         //       'source': 'my-polygon-source', // Reference the data source by its ID
+          //      'paint': {
+           //         'fill-color': [
+            //            'match',
+             //           ['get', 'color'],
+              //          '#0080ff', '#0080ff',
+               //         '#ff0000', '#ff0000',
+                //        '#00ff00', '#00ff00',
+                 //       '#808080' // default color
+                   // ],
+                    //'fill-opacity': 0.5
+        //        }
+       //     });
+});
+    </script>
+</body>
+</html>
